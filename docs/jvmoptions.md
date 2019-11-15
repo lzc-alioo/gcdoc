@@ -7,13 +7,13 @@ Java HotSpot VM Options
 
 # Launches a Java application.
 
-## Synopsis
+## Synopsis  简介
 java [options] classname [args]
 java [options] -jar filename [args]
-- options  Command-line options separated by spaces. See Options.
-- classname  The name of the class to be launched.
-- filename  The name of the Java Archive (JAR) file to be called. Used only with the -jar option.
-- args  The arguments passed to the main() method separated by spaces.
+- options  Command-line options separated by spaces. See Options. 选项命令行选项用空格分隔。请参见选项
+- classname  The name of the class to be launched.  要启动的类的名称。
+- filename  The name of the Java Archive (JAR) file to be called. Used only with the -jar option.  要调用的Java存档（JAR）文件的名称。仅与-jar选项一起使用。
+- args  The arguments passed to the main() method separated by spaces.  传递给main（）方法的参数，用空格分隔。
 
 ## Description
 The java command starts a Java application. It does this by starting the Java Runtime Environment (JRE), loading the specified class, and calling that class's main() method. The method must be declared public and static, it must not return any value, and it must accept a String array as a parameter. The method declaration has the following form:
@@ -62,6 +62,7 @@ Boolean options are used to either enable a feature that is disabled by default 
 For options that require an argument, the argument may be separated from the option name by a space, a colon (:), or an equal sign (=), or the argument may directly follow the option (the exact syntax differs for each option). If you are expected to specify the size in bytes, you can use no suffix, or use the suffix k or K for kilobytes (KB), m or M for megabytes (MB), g or G for gigabytes (GB). For example, to set the size to 8 GB, you can specify either 8g, 8192m, 8388608k, or 8589934592 as the argument. If you are expected to specify the percentage, use a number from 0 to 1 (for example, specify 0.25 for 25%).
 对于需要参数的选项，参数可以用空格、冒号（：）或等号（=）与选项名分隔，或者参数可以直接跟在选项后面（每个选项的确切语法不同）。如果希望指定字节大小，可以不使用后缀，也可以使用后缀k或k表示千字节（KB），m或m表示兆字节（MB），g或g表示千兆字节（GB）。例如，要将大小设置为8GB，可以指定8g、8192m、8388608k或8589934592作为参数。如果希望指定百分比，请使用0到1之间的数字（例如，指定0.25作为25%）。
 
+---
 ## Standard Options
 
 These are the most commonly used options that are supported by all implementations of the JVM.
@@ -226,6 +227,270 @@ Quotation marks are necessary only if there are spaces in the release parameter.
 For JAR files, the preference is to specify version requirements in the JAR file manifest rather than on the command line.
 对于JAR文件，首选项是在JAR文件清单中而不是在命令行中指定版本要求。
 
+---
+## Non-Standard Options  非标准选项
+                      
+These options are general purpose options that are specific to the Java HotSpot Virtual Machine.
+这些选项是特定于Java热点虚拟机的通用选项。
+
+### -X
+Displays help for all available -X options.
+显示所有可用-X选项的说明。
+
+### -Xbatch
+Disables background compilation. By default, the JVM compiles the method as a background task, running the method in interpreter mode until the background compilation is finished. The -Xbatch flag disables background compilation so that compilation of all methods proceeds as a foreground task until completed.
+禁用后台编译。默认情况下，JVM将该方法编译为后台任务，在解释器模式下运行该方法，直到后台编译完成。-Xbatch标志禁用后台编译，以便所有方法的编译作为前台任务进行，直到完成为止。
+
+This option is equivalent to -XX:-BackgroundCompilation.
+此选项相当于-XX:-BackgroundCompilation。
+
+### -Xbootclasspath:path
+Specifies a list of directories, JAR files, and ZIP archives separated by colons (:) to search for boot class files. These are used in place of the boot class files included in the JDK.
+指定用冒号（：）分隔的目录、JAR文件和ZIP存档的列表，以搜索引导类文件。这些文件用于代替JDK中包含的引导类文件。
+
+Do not deploy applications that use this option to override a class in rt.jar, because this violates the JRE binary code license.
+不要部署使用此选项重写rt.jar中的类的应用程序，因为这违反了JRE二进制代码许可证。
+
+### -Xbootclasspath/a:path
+Specifies a list of directories, JAR files, and ZIP archives separated by colons (:) to append to the end of the default bootstrap class path.
+指定要附加到默认引导类路径末尾的目录、JAR文件和以冒号（：）分隔的ZIP存档的列表。
+
+Do not deploy applications that use this option to override a class in rt.jar, because this violates the JRE binary code license.
+不要部署使用此选项重写rt.jar中的类的应用程序，因为这违反了JRE二进制代码许可证。
+
+### -Xbootclasspath/p:path
+Specifies a list of directories, JAR files, and ZIP archives separated by colons (:) to prepend to the front of the default bootstrap class path.
+指定要附加到默认引导类路径前面的目录、JAR文件和以冒号（：）分隔的ZIP存档的列表。
+
+Do not deploy applications that use this option to override a class in rt.jar, because this violates the JRE binary code license.
+
+### -Xcheck:jni
+Performs additional checks for Java Native Interface (JNI) functions. Specifically, it validates the parameters passed to the JNI function and the runtime environment data before processing the JNI request. Any invalid data encountered indicates a problem in the native code, and the JVM will terminate with an irrecoverable error in such cases. Expect a performance degradation when this option is used.
+对Java本机接口（JNI）函数执行附加检查。具体来说，它在处理JNI请求之前验证传递给JNI函数的参数和运行时环境数据。遇到的任何无效数据都表示本机代码有问题，在这种情况下，JVM将以不可恢复的错误终止。使用此选项时，预期性能会降低。
+
+### -Xcomp
+Forces compilation of methods on first invocation. By default, the Client VM (-client) performs 1,000 interpreted method invocations and the Server VM (-server) performs 10,000 interpreted method invocations to gather information for efficient compilation. Specifying the -Xcomp option disables interpreted method invocations to increase compilation performance at the expense of efficiency.
+在第一次调用时强制编译方法。默认情况下，客户端VM（-Client）执行1000个解释方法调用，服务器VM（-Server）执行10000个解释方法调用，以收集有效编译所需的信息。指定-Xcomp选项将禁用解释方法调用以提高编译性能，但会降低效率。
+
+You can also change the number of interpreted method invocations before compilation using the -XX:CompileThreshold option.
+还可以在编译之前使用-XX:CompileThreshold选项更改解释方法调用的次数。
+
+### -Xdebug
+Does nothing. Provided for backward compatibility.
+什么都不做。提供向后兼容性。
+
+### -Xdiag
+Shows additional diagnostic messages.
+显示其他诊断信息。
+
+### -Xfuture
+Enables strict class-file format checks that enforce close conformance to the class-file format specification. Developers are encouraged to use this flag when developing new code because the stricter checks will become the default in future releases.
+启用严格的类文件格式检查，以强制严格遵守类文件格式规范。鼓励开发人员在开发新代码时使用此标志，因为在将来的版本中，更严格的检查将成为默认检查。
+
+### -Xint
+Runs the application in interpreted-only mode. Compilation to native code is disabled, and all bytecode is executed by the interpreter. The performance benefits offered by the just in time (JIT) compiler are not present in this mode.
+以仅解释模式运行应用程序。对本机代码的编译被禁用，所有字节码都由解释器执行。（JIT）即时编译器提供的性能优势在此模式中不存在。
+
+### -Xinternalversion
+Displays more detailed JVM version information than the -version option, and then exits.
+显示比“版本”选项更详细的JVM版本信息，然后退出。
+
+### -Xloggc:filename
+Sets the file to which verbose GC events information should be redirected for logging. The information written to this file is similar to the output of -verbose:gc with the time elapsed since the first GC event preceding each logged event. The -Xloggc option overrides -verbose:gc if both are given with the same java command.
+设置要将详细GC事件信息重定向到其中进行日志记录的文件。写入此文件的信息类似于-verbose:gc的输出，其中包含自每个记录的事件之前的第一个gc事件以来经过的时间。-Xloggc选项重写-verbose:gc，如果这两个选项都是用同一个java命令给出的。
+
+Example:
+-Xloggc:garbage-collection.log
+-Xmaxjitcodesize=size
+Specifies the maximum code cache size (in bytes) for JIT-compiled code. Append the letter k or K to indicate kilobytes, m or M to indicate megabytes, g or G to indicate gigabytes. The default maximum code cache size is 240 MB; if you disable tiered compilation with the option -XX:-TieredCompilation, then the default size is 48 MB:
+指定JIT编译代码的最大代码缓存大小（以字节为单位）。附加字母k或k表示千字节，m或m表示兆字节，g或g表示千兆字节。默认最大代码缓存大小为240 MB；如果禁用选项-XX:-TiErdEd汇编的分层编译，则默认大小为48 MB：
+
+### -Xmaxjitcodesize=240m
+This option is equivalent to -XX:ReservedCodeCacheSize.
+此选项相当于-XX:ReservedCodeCacheSize。
+
+### -Xmixed
+Executes all bytecode by the interpreter except for hot methods, which are compiled to native code.
+由解释器执行所有字节码，但编译为本机代码的热方法除外。
+
+### -Xmnsize
+Sets the initial and maximum size (in bytes) of the heap for the young generation (nursery). Append the letter k or K to indicate kilobytes, m or M to indicate megabytes, g or G to indicate gigabytes.
+指定年青代大小（以字节为单位）。附加字母k或k表示千字节，m或m表示兆字节，g或g表示千兆字节。
+
+The young generation region of the heap is used for new objects. GC is performed in this region more often than in other regions. If the size for the young generation is too small, then a lot of minor garbage collections will be performed. If the size is too large, then only full garbage collections will be performed, which can take a long time to complete. Oracle recommends that you keep the size for the young generation between a half and a quarter of the overall heap size.
+堆的年轻一代区域用于新对象。GC在这个区域的执行频率高于其他区域。如果年轻一代的大小太小，那么将执行许多小的垃圾收集。如果大小太大，则只执行完整的垃圾回收，这可能需要很长时间才能完成。Oracle建议您将年轻一代的大小保持在整个堆大小的一半到四分之一之间。
+
+The following examples show how to set the initial and maximum size of young generation to 256 MB using various units:
+下面的示例演示如何使用各种单元将初始一代和最大大小的年轻一代设置为256 MB：
+
+-Xmn256m
+-Xmn262144k
+-Xmn268435456
+Instead of the -Xmn option to set both the initial and maximum size of the heap for the young generation, you can use -XX:NewSize to set the initial size and -XX:MaxNewSize to set the maximum size.
+代替Xmn选项来设置年轻一代堆的初始大小和最大大小，可以使用-x:NeWestSead来设置初始大小和-XX:Max NeWSIZE来设置最大大小。
+
+### -Xmssize
+Sets the initial size (in bytes) of the heap. This value must be a multiple of 1024 and greater than 1 MB. Append the letter k or K to indicate kilobytes, m or M to indicate megabytes, g or G to indicate gigabytes.
+设置堆的初始大小（字节）。此值必须是1024的倍数且大于1 MB。附加字母k或k表示千字节，m或m表示兆字节，g或g表示千兆字节。
+
+The following examples show how to set the size of allocated memory to 6 MB using various units:
+
+-Xms6291456
+-Xms6144k
+-Xms6m
+If you do not set this option, then the initial size will be set as the sum of the sizes allocated for the old generation and the young generation. The initial size of the heap for the young generation can be set using the -Xmn option or the -XX:NewSize option.
+
+-Xmxsize
+Specifies the maximum size (in bytes) of the memory allocation pool in bytes. This value must be a multiple of 1024 and greater than 2 MB. Append the letter k or K to indicate kilobytes, m or M to indicate megabytes, g or G to indicate gigabytes. The default value is chosen at runtime based on system configuration. For server deployments, -Xms and -Xmx are often set to the same value. See the section "Ergonomics" in Java SE HotSpot Virtual Machine Garbage Collection Tuning Guide at http://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/index.html.
+以字节为单位指定内存分配池的最大大小（以字节为单位）。此值必须是1024的倍数且大于2 MB。附加字母k或k表示千字节，m或m表示兆字节，g或g表示千兆字节。默认值在运行时根据系统配置选择。对于服务器部署，-Xms和-Xmx通常设置为相同的值。请参阅http://docs.oracle.com/Java SE/8/docs/technotes/guides/vm/gctuning/index.html上Java SE HotSpot虚拟机垃圾收集优化指南中的“人体工程学”部分。
+
+The following examples show how to set the maximum allowed size of allocated memory to 80 MB using various units:
+
+-Xmx83886080
+-Xmx81920k
+-Xmx80m
+The -Xmx option is equivalent to -XX:MaxHeapSize.
+
+### -Xnoclassgc
+Disables garbage collection (GC) of classes. This can save some GC time, which shortens interruptions during the application run.
+禁用类的垃圾收集（GC）。这可以节省一些GC时间，从而缩短应用程序运行期间的中断。
+
+When you specify -Xnoclassgc at startup, the class objects in the application will be left untouched during GC and will always be considered live. This can result in more memory being permanently occupied which, if not used carefully, will throw an out of memory exception.
+当您在启动时指定-Xnoclassgc时，应用程序中的类对象将在GC期间保持不变，并且将始终被视为活动的。这会导致更多的内存被永久占用，如果不小心使用，将抛出内存不足异常。
+
+
+### -Xprof
+Profiles the running program and sends profiling data to standard output. This option is provided as a utility that is useful in program development and is not intended to be used in production systems.
+分析正在运行的程序并将分析数据发送到标准输出。此选项是作为一个实用程序提供的，在程序开发中很有用，不打算在生产系统中使用。
+
+### -Xrs
+Reduces the use of operating system signals by the JVM.
+减少了JVM对操作系统信号的使用。
+
+Shutdown hooks enable orderly shutdown of a Java application by running user cleanup code (such as closing database connections) at shutdown, even if the JVM terminates abruptly.
+关闭挂钩通过在关闭时运行用户清理代码（例如关闭数据库连接）来实现Java应用程序的有序关闭，即使JVM突然终止。
+
+The JVM catches signals to implement shutdown hooks for unexpected termination. The JVM uses SIGHUP, SIGINT, and SIGTERM to initiate the running of shutdown hooks.
+JVM捕获信号以实现意外终止的关闭挂钩。JVM使用SIGHUP、SIGINT和SIGTERM启动关闭挂钩的运行。
+
+The JVM uses a similar mechanism to implement the feature of dumping thread stacks for debugging purposes. The JVM uses SIGQUIT to perform thread dumps.
+JVM使用类似的机制来实现转储线程堆栈以进行调试的功能。JVM使用SIGQUIT来执行线程转储。
+
+Applications embedding the JVM frequently need to trap signals such as SIGINT or SIGTERM, which can lead to interference with the JVM signal handlers. The -Xrs option is available to address this issue. When -Xrs is used, the signal masks for SIGINT, SIGTERM, SIGHUP, and SIGQUIT are not changed by the JVM, and signal handlers for these signals are not installed.
+嵌入JVM的应用程序经常需要捕获SIGINT或SIGTERM等信号，这可能会导致对JVM信号处理程序的干扰。可以使用-Xrs选项来解决此问题。使用-Xrs时，JVM不会更改SIGINT、SIGTERM、SIGHUP和SIGQUIT的信号掩码，也不会安装这些信号的信号处理程序。
+
+There are two consequences of specifying -Xrs:
+指定-Xrs有两个结果：
+
+SIGQUIT thread dumps are not available.
+SIGQUIT线程转储不可用。
+
+User code is responsible for causing shutdown hooks to run, for example, by calling System.exit() when the JVM is to be terminated.
+当JVM将被终止时，用户代码负责导致关闭钩子运行，例如，通过调用 System.exit() 调用。
+
+### -Xshare:mode
+Sets the class data sharing (CDS) mode. Possible mode arguments for this option include the following:
+设置类数据共享（CDS）模式。此选项可能的模式参数包括：
+
+auto
+
+Use CDS if possible. This is the default value for Java HotSpot 32-Bit Client VM.
+如果可能，请使用CDS。这是Java热点32位客户端虚拟机的默认值。
+
+on
+
+Require the use of CDS. Print an error message and exit if class data sharing cannot be used.
+需要使用CDS。如果无法使用类数据共享，则打印错误消息并退出。
+
+off
+
+Do not use CDS. This is the default value for Java HotSpot 32-Bit Server VM, Java HotSpot 64-Bit Client VM, and Java HotSpot 64-Bit Server VM.
+不要使用CDS。这是Java HotSpot 32位服务器虚拟机、Java HotSpot 64位客户端虚拟机和Java HotSpot 64位服务器虚拟机的默认值。
+
+
+dump
+Manually generate the CDS archive. Specify the application class path as described in "Setting the Class Path".
+手动生成CDS存档。按照“设置类路径”中的说明指定应用程序类路径。
+
+You should regenerate the CDS archive with each new JDK release.
+您应该在每个新的JDK版本中重新生成CDS存档。
+
+### -XshowSettings:category
+Shows settings and continues. Possible category arguments for this option include the following:
+显示设置并继续。此选项的可能类别参数包括：
+
+all
+
+Shows all categories of settings. This is the default value.
+显示所有设置类别。这是默认值。
+
+locale
+
+Shows settings related to locale.
+显示与区域设置相关的设置。
+
+properties
+
+Shows settings related to system properties.
+
+vm
+Shows the settings of the JVM.
+显示与系统属性相关的设置。
+
+
+### -Xsssize
+Sets the thread stack size (in bytes). Append the letter k or K to indicate KB, m or M to indicate MB, g or G to indicate GB. The default value depends on the platform:
+设置线程堆栈大小（字节）。附加字母k或k表示KB，m或m表示MB，g或g表示GB。默认值取决于平台：
+
+Linux/ARM (32-bit): 320 KB
+
+Linux/i386 (32-bit): 320 KB
+
+Linux/x64 (64-bit): 1024 KB
+
+OS X (64-bit): 1024 KB
+
+Oracle Solaris/i386 (32-bit): 320 KB
+
+Oracle Solaris/x64 (64-bit): 1024 KB
+
+The following examples set the thread stack size to 1024 KB in different units:
+
+-Xss1m
+-Xss1024k
+-Xss1048576
+This option is equivalent to -XX:ThreadStackSize.
+
+
+### -Xusealtsigs
+Use alternative signals instead of SIGUSR1 and SIGUSR2 for JVM internal signals. This option is equivalent to -XX:+UseAltSigs.
+对JVM内部信号使用替代信号，而不是SIGUSR1和SIGUSR2。此选项相当于-XX:+UseAltSigs。
+
+### -Xverify:mode
+Sets the mode of the bytecode verifier. Bytecode verification ensures that class files are properly formed and satisfy the constraints listed in section 4.10, Verification of class Files in the The Java Virtual Machine Specification.
+设置字节码验证程序的模式。字节码验证确保类文件的格式正确，并满足Java虚拟机规范中第4.10节“类文件验证”中列出的约束。
+
+Do not turn off verification as this reduces the protection provided by Java and could cause problems due to ill-formed class files.
+不要关闭验证，因为这会降低Java提供的保护，并可能由于类文件格式不正确而导致问题。
+
+Possible mode arguments for this option include the following:
+此选项可能的模式参数包括：
+
+remote
+
+Verifies all bytecodes not loaded by the bootstrap class loader. This is the default behavior if you do not specify the -Xverify option.
+验证引导类加载器未加载的所有字节码。如果不指定-Xverify选项，则这是默认行为。
+
+all
+
+Enables verification of all bytecodes.
+启用对所有字节码的验证。
+
+
+none
+
+Disables verification of all bytecodes. Use of -Xverify:none is unsupported.
+禁用所有字节码的验证。不支持使用-Xverify:none。
 
 
  
